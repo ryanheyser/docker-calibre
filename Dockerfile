@@ -1,4 +1,4 @@
-FROM ghcr.io/ryanheyser/docker-baseimage-rdesktop-web:ubuntunoble
+FROM ghcr.io/ryanheyser/docker-baseimage-rdesktop-web:latest
 
 # set version label
 ARG BUILD_DATE
