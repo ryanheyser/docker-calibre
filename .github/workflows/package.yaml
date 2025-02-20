@@ -1,16 +1,22 @@
-name: Package Trigger Scheduler
+name: Build Scheduler
 
 on:
   schedule:
     - cron:  '11 6 * * 3'
   workflow_dispatch:
+    inputs:
+      calibre-version:
+        type: string
+        description: semantic version of calibre to build
+        required: false
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  CALIBRE_RELEASE: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.calibre-version != '' && github.event.inputs.calibre-version || '' }}
 
 jobs:
-  package-trigger-scheduler:
+  build-scheduler:
     runs-on: ubuntu-latest
 
     permissions:
@@ -45,6 +51,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            CALIBRE_RELEASE=${{ env.CALIBRE_RELEASE }}
       
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2.2.0

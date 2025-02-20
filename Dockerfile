@@ -1,11 +1,11 @@
-FROM ghcr.io/linuxserver/baseimage-rdesktop-web:ubuntunoble
+FROM ghcr.io/ryanheyser/docker-baseimage-rdesktop-web:ubuntunoble
 
 # set version label
 ARG BUILD_DATE
 ARG VERSION
 ARG CALIBRE_RELEASE
-LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="aptalca"
+LABEL build_version="ryanheyser version:- ${VERSION} Build-date:- ${BUILD_DATE}"
+LABEL maintainer="ryanheyser"
 
 ENV \
   CUSTOM_PORT="8080" \
