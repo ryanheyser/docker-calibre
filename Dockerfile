@@ -21,7 +21,7 @@ RUN \
     fonts-wqy-microhei \
     jq \
     libnss3 \
-    libqpdf26 \
+    libqpdf29t64 \
     libxkbcommon-x11-0 \
     libxcb-icccm4 \
     libxcb-image0 \
