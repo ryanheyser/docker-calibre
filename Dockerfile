@@ -13,7 +13,8 @@ ENV \
   HOME="/config"
 
 RUN \
-  echo "**** install runtime packages ****" && \
+  export DEBIAN_FRONTEND="noninteractive" && \
+	echo "**** install runtime packages ****" && \
   apt-get update && \
   apt-get install -y --no-install-recommends \
     dbus \
