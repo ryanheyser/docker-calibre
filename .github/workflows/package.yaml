@@ -65,6 +65,8 @@ jobs:
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern=latest
+            type=semver,pattern=${{ env.CALIBRE_RELEASE }}
             type=sha
             type=schedule,pattern={{date 'YYYYMMDD'}}
       
