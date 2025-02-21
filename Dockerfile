@@ -14,8 +14,8 @@ ENV \
 
 RUN \
   export DEBIAN_FRONTEND="noninteractive" && \
-	if [[ "${CALIBRE_RELEASE}" == "" ]]; then unset CALIBRE_RELEASE; fi && \
-	echo "**** install runtime packages ****" && \
+  if [[ "${CALIBRE_RELEASE}" == "" ]]; then unset CALIBRE_RELEASE; fi && \
+  echo "**** install runtime packages ****" && \
   apt-get update && \
   apt-get install -y --no-install-recommends \
     dbus \
