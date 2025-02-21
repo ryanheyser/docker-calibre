@@ -28,7 +28,7 @@ RUN \
     libxcb-icccm4 \
     libxcb-image0 \
     libxcb-keysyms1 \
-		libopengl0 \
+    libopengl0 \
     libxcb-randr0 \
     libxcb-render-util0 \
     libxcb-xinerama0 \
