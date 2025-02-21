@@ -14,6 +14,7 @@ ENV \
 
 RUN \
   export DEBIAN_FRONTEND="noninteractive" && \
+  export XDG_UTILS_INSTALL_MODE="user" && \
   if [ -z ${CALIBRE_RELEASE} ]; then unset CALIBRE_RELEASE; fi && \
   echo "**** install runtime packages ****" && \
   apt-get update && \
