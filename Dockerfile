@@ -37,6 +37,7 @@ RUN \
     python3-xdg \
     ttf-wqy-zenhei \
     wget \
+    xdg-utils \
     xz-utils && \
   apt-get install -y \
     speech-dispatcher && \
