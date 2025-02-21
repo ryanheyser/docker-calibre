@@ -1,4 +1,4 @@
-FROM ghcr.io/ryanheyser/docker-baseimage-rdesktop-web:sha256-b9c3996abecdb9f8a911d4c63187def6007d22bd0c6cbca18d4db3c73e4092c4
+FROM ghcr.io/ryanheyser/docker-baseimage-rdesktop-web:master
 
 # set version label
 ARG BUILD_DATE
