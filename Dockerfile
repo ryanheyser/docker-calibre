@@ -45,10 +45,10 @@ RUN \
     | jq -r .tag_name); \
   fi && \
   CALIBRE_VERSION="$(echo ${CALIBRE_RELEASE} | cut -c2-)" && \
-  CALIBRE_URL="https://download.calibre-ebook.com/${CALIBRE_VERSION}/calibre-${CALIBRE_VERSION}-x86_64.txz" && \
+	CALIBRE_URL="https://download.calibre-ebook.com/${CALIBRE_VERSION}/calibre-${CALIBRE_VERSION}-x86_64.txz" && \
   curl -o \
     /tmp/calibre-tarball.txz -L \
-    "$CALIBRE_URL" && \
+    "${CALIBRE_URL}" && \
   tar xvf /tmp/calibre-tarball.txz -C \
     /opt/calibre && \
   /opt/calibre/calibre_postinstall && \
@@ -57,9 +57,9 @@ RUN \
   WEBSOCAT_RELEASE=$(curl -sX GET "https://api.github.com/repos/vi/websocat/releases/latest" \
     | awk '/tag_name/{print $4;exit}' FS='[""]'); \
   curl -o \
-    /usr/bin/websocat -fL \
+    /usr/local/bin/websocat -fL \
     "https://github.com/vi/websocat/releases/download/${WEBSOCAT_RELEASE}/websocat.x86_64-unknown-linux-musl" && \
-  chmod +x /usr/bin/websocat && \
+  chmod +x /usr/local/bin/websocat && \
   echo "**** cleanup ****" && \
   apt-get clean && \
   rm -rf \
