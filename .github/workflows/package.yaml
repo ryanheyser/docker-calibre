@@ -9,6 +9,11 @@ on:
         type: string
         description: semantic version of calibre to build
         required: false
+  workflow_call:
+    inputs:
+      calibre-version:
+        type: string
+        required: true
 
 env:
   REGISTRY: ghcr.io
