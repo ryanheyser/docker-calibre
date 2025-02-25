@@ -16,8 +16,8 @@ env:
   CALIBRE_RELEASE: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.calibre-version != '' && github.event.inputs.calibre-version || '' }}
 
 jobs:
-  build-scheduler:
-    runs-on: ubuntu-latest
+  build-image:
+    runs-on: ${{ matrix.runs-on }}
 
     strategy:
       fail-fast: false
@@ -28,8 +28,10 @@ jobs:
         include:
           - platform: "linux/amd64"
             dockerfile: "Dockerfile"
+            runs-on: ubuntu-24.04
           # - platform: "linux/arm64"
           #   dockerfile: "Dockerfile.aarch64"
+          #   runs-on: ubuntu-24.04-arm
     
     permissions:
       contents: read
@@ -38,6 +40,11 @@ jobs:
       id-token: write
     
     steps:
+      - name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
@@ -60,15 +67,15 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern=latest
-            type=semver,pattern=${{ env.CALIBRE_RELEASE }}
-            type=sha
-            type=schedule,pattern={{date 'YYYYMMDD'}}
+          # tags: |
+          #   type=ref,event=branch
+          #   type=ref,event=pr
+          #   type=semver,pattern={{version}}
+          #   type=semver,pattern={{major}}.{{minor}}
+          #   type=semver,pattern=latest
+          #   type=semver,pattern=${{ env.CALIBRE_RELEASE }}
+          #   type=sha
+          #   type=schedule,pattern={{date 'YYYYMMDD'}}
       
       - name: Build and Push Docker image
         id: push
@@ -78,14 +85,95 @@ jobs:
           file: ${{ matrix.dockerfile }}
           platforms: ${{ matrix.platform }}
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          # tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          sbom: true
+          provenance: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          outputs: type=image,"name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}",push-by-digest=true,name-canonical=true,push=true
           build-args: |
             CALIBRE_RELEASE=${{ env.CALIBRE_RELEASE }}
-      
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
+    
+      - name: Export digest
+        run: |
+          mkdir -p ${{ runner.temp }}/digests
+          digest="${{ steps.push.outputs.digest }}"
+          touch "${{ runner.temp }}/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+          name: digests-${{ env.PLATFORM_PAIR }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+      # - name: Generate artifact attestation
+      #   uses: actions/attest-build-provenance@v2
+      #   with:
+      #     subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      #     subject-digest: ${{ steps.push.outputs.digest }}
+      #     push-to-registry: true
+
+  merge:
+    runs-on: ubuntu-24.04
+
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    needs:
+      - build-image
+
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-*
+          merge-multiple: true
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          platforms: ${{ matrix.platform }}
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}.{{patch}}
+            type=semver,pattern=${{ env.CALIBRE_RELEASE }}
+            type=semver,pattern={{raw}}
+            type=sha
+            type=schedule,pattern={{date 'YYYYMMDD'}}
+            type=schedule,pattern=nightly
+            type=ref,event=tag
+            type=ref,event=pr
+            type=ref,event=branch
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Create manifest list and push
+        working-directory: ${{ runner.temp }}/digests
+        run: |
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
