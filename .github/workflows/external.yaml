@@ -30,6 +30,8 @@ jobs:
   # call-package-workflow:
   #   uses: ryanheyser/docker-calibre/.github/workflows/package.yaml@ryanheyser-main
   #   needs: get-release-version
+  #   if: needs.get-release-version.outputs.is_update == 'true'
   #   with:
   #     calibre-version: ${{ needs.get-release-version.outputs.result }}
+  #     additional-docker-tags: ${{ needs.get-release-version.outputs.docker_tags }}
   #   secrets: inherit
