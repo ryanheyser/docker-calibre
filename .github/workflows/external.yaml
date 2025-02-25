@@ -14,7 +14,7 @@ jobs:
       result: ${{ steps.check_version.outputs.result }}
       docker_tags: ${{ steps.check_version.outputs.docker_tags }}
     steps:
-      - uses: mogeko/latest-version@v1
+      - uses: mogeko/latest-version@v1.1.2
         id: check_version
         with:
           repo: kovidgoyal/calibre
