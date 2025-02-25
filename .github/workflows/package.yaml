@@ -24,14 +24,14 @@ jobs:
       matrix:
         platform:
           - linux/amd64
-          # - linux/arm64
+          - linux/arm64
         include:
           - platform: "linux/amd64"
             dockerfile: "Dockerfile"
             runs-on: ubuntu-24.04
-          # - platform: "linux/arm64"
-          #   dockerfile: "Dockerfile.aarch64"
-          #   runs-on: ubuntu-24.04-arm
+          - platform: "linux/arm64"
+            dockerfile: "Dockerfile.aarch64"
+            runs-on: ubuntu-24.04-arm
     
     permissions:
       contents: read
