@@ -33,6 +33,6 @@ jobs:
   #   needs: [get-release-version,print-release-version]
   #   if: needs.get-release-version.outputs.is_update == 'true'
   #   with:
-  #     calibre-version: ${{ needs.get-release-version.outputs.result }}
+  #     calibre-version: ${{ env.CALIBRE_RELEASE_VERSION }}
   #     additional-docker-tags: ${{ needs.get-release-version.outputs.docker_tags }}
   #   secrets: inherit
