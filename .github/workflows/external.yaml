@@ -27,9 +27,10 @@ jobs:
           echo '${{ needs.get-release-version.outputs.is_update }}'
           echo '${{ needs.get-release-version.outputs.result }}' | jq '.'
           echo '${{ needs.get-release-version.outputs.docker_tags }}'
+          echo 'CALIBRE_RELEASE_VERSION=$(echo ${{ needs.get-release-version.outputs.result }} | jq -r ".stable_version")' >> $GITHUB_ENV
   # call-package-workflow:
   #   uses: ryanheyser/docker-calibre/.github/workflows/package.yaml@ryanheyser-main
-  #   needs: get-release-version
+  #   needs: [get-release-version,print-release-version]
   #   if: needs.get-release-version.outputs.is_update == 'true'
   #   with:
   #     calibre-version: ${{ needs.get-release-version.outputs.result }}

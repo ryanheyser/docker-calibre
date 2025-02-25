@@ -14,6 +14,9 @@ on:
       calibre-version:
         type: string
         required: true
+      additional-docker-tags:
+        type: string
+        required: false
 
 env:
   REGISTRY: ghcr.io
@@ -172,6 +175,7 @@ jobs:
             type=ref,event=pr
             type=ref,event=branch
             type=raw,value=latest,enable={{is_default_branch}}
+            ${{ github.event_name == 'workflow_call' && github.event.inputs.additional-docker-tags }}
 
       - name: Create manifest list and push
         working-directory: ${{ runner.temp }}/digests
