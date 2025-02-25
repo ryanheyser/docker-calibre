@@ -28,7 +28,7 @@ jobs:
           echo '${{ needs.get-release-version.outputs.result }}' | jq '.'
           echo '${{ needs.get-release-version.outputs.docker_tags }}'
   # call-package-workflow:
-  #   uses: ryanheyser/docker-calibre/.github/workflows/package.yaml@master
+  #   uses: ryanheyser/docker-calibre/.github/workflows/package.yaml@ryanheyser-main
   #   needs: get-release-version
   #   with:
   #     calibre-version: ${{ needs.get-release-version.outputs.result }}
