@@ -47,5 +47,5 @@ jobs:
     # if: needs.get-release-version.outputs.is_update == 'true'
     with:
       calibre-version: ${{ needs.print-release-version.outputs.calibre-release-version }}
-      additional-docker-tags: ${{ github.event_name == 'workflow_dispatch' && needs.get-release-version.outputs.force-enable-docker-tags || needs.get-release-version.outputs.docker_tags }}
+      additional-docker-tags: ${{ github.event_name == 'workflow_dispatch' && needs.print-release-version.outputs.force-enable-docker-tags || needs.get-release-version.outputs.docker_tags }}
     secrets: inherit
