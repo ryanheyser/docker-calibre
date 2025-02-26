@@ -9,6 +9,10 @@ on:
         type: string
         description: semantic version of calibre to build
         required: false
+      externalcall:
+        type: boolean
+        required: false
+        default: false
   workflow_call:
     inputs:
       calibre-version:
@@ -17,6 +21,10 @@ on:
       additional-docker-tags:
         type: string
         required: false
+      externalcall:
+        type: boolean
+        required: false
+        default: true
 
 env:
   REGISTRY: ghcr.io
@@ -164,6 +172,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
+            ${{ inputs.externalcall == true && inputs.additional-docker-tags || '' }}
             type=semver,pattern=v{{version}}
             type=semver,pattern=v{{major}}.{{minor}}.{{patch}}
             type=semver,pattern=${{ env.CALIBRE_RELEASE }}
@@ -175,7 +184,6 @@ jobs:
             type=ref,event=pr
             type=ref,event=branch
             type=raw,value=latest,enable={{is_default_branch}}
-            ${{ github.event_name == 'workflow_call' && inputs.additional-docker-tags || '' }}
 
       - name: Create manifest list and push
         working-directory: ${{ runner.temp }}/digests
