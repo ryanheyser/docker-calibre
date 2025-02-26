@@ -24,6 +24,7 @@ jobs:
     needs: get-release-version
     outputs:
       calibre-release-version: ${{ steps.output-release-info.outputs.CALIBRE_RELEASE_VERSION }}
+      calibre-release-version-complete: ${{ steps.output-release-info.outputs.CALIBRE_RELEASE_VERSION_COMPLETE }}
       force-enable-docker-tags: ${{ steps.output-docker-tags.outputs.DOCKER_TAGS }}
     steps:
       - id: get-release-info
@@ -34,6 +35,8 @@ jobs:
           echo '${{ needs.get-release-version.outputs.result }}' | jq -r '.stable_version'
       - id: output-release-info
         run: echo "CALIBRE_RELEASE_VERSION=$(echo '${{ needs.get-release-version.outputs.result }}' | jq -r '.stable_version')" >> $GITHUB_OUTPUT
+      - id: output-release-info-complete
+        run: echo "CALIBRE_RELEASE_VERSION_COMPLETE=$(echo '${{ needs.get-release-version.outputs.result }}' | jq -r '.')" >> $GITHUB_OUTPUT
       - id: output-docker-tags
         run: echo "DOCKER_TAGS=$(echo '${{ needs.get-release-version.outputs.docker_tags }}' | tr '\n' '\f' | sed 's/enable=false/enable=true/g' | tr '\f' '\n')" >> $GITHUB_OUTPUT
   call-package-workflow:
@@ -43,9 +46,25 @@ jobs:
       attestations: write
       id-token: write
     uses: ryanheyser/docker-calibre/.github/workflows/package.yaml@ryanheyser-main
-    needs: [get-release-version,print-release-version]
+    needs: [ get-release-version, print-release-version ]
     if: needs.get-release-version.outputs.is_update == 'true'
     with:
       calibre-version: ${{ needs.print-release-version.outputs.calibre-release-version }}
       additional-docker-tags: ${{ github.event_name == 'workflow_dispatch' && needs.print-release-version.outputs.force-enable-docker-tags || needs.get-release-version.outputs.docker_tags }}
     secrets: inherit
+  create-release:
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    needs: [ get-release-version, print-release-version ]
+    if: needs.get-release-version.outputs.is_update == 'true'
+    uses: actions/create-release@v1
+    secrets: inherit
+    with:
+      tag_name: calibre-${{ needs.print-release-version.outputs.calibre-release-version }}-ryanheyser
+      release_name: Calibre ${{ needs.print-release-version.outputs.calibre-release-version }}
+      body: ${{ needs.print-release-version.outputs.calibre-release-version-complete != '' && needs.print-release-version.outputs.calibre-release-version-complete || '' }}
+      draft: false
+      prerelease: false
