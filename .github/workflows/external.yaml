@@ -38,8 +38,11 @@ jobs:
       - id: output-release-info-complete
         run: echo "CALIBRE_RELEASE_VERSION_COMPLETE=\"$(echo '${{ needs.get-release-version.outputs.result }}' | jq '.' | tr '\n' '\r' )\"" >> $GITHUB_OUTPUT
       - id: output-docker-tags
-        run: echo "DOCKER_TAGS=$(echo '${{ needs.get-release-version.outputs.docker_tags }}' | tr '\n' '\f' | sed 's/enable=false/enable=true/g' | tr '\f' '\n')" >> $GITHUB_OUTPUT
-  create-release:
+        run: |
+          DOCKER_TAGS=$(echo '${{ needs.get-release-version.outputs.docker_tags }}' | tr '\n' '\f' | sed 's/enable=false/enable=true/g' | tr '\f' '\n'
+          echo "DOCKER_TAGS<<EOF" >> $GITHUB_OUTPUT
+          echo "$DOCKER_TAGS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
     permissions:
       contents: write
       packages: write
