@@ -39,7 +39,7 @@ jobs:
       id-token: write
     uses: ryanheyser/docker-calibre/.github/workflows/package.yaml@ryanheyser-main
     needs: [get-release-version,print-release-version]
-    if: needs.get-release-version.outputs.is_update == 'true'
+    # if: needs.get-release-version.outputs.is_update == 'true'
     with:
       calibre-version: ${{ needs.print-release-version.outputs.calibre-release-version }}
       additional-docker-tags: ${{ needs.get-release-version.outputs.docker_tags }}
