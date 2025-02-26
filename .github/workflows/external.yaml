@@ -54,17 +54,18 @@ jobs:
     secrets: inherit
   create-release:
     permissions:
-      contents: read
+      contents: write
       packages: write
       attestations: write
       id-token: write
     needs: [ get-release-version, print-release-version ]
     if: needs.get-release-version.outputs.is_update == 'true'
-    uses: actions/create-release@v1
+    uses: softprops/action-gh-release@v2
     secrets: inherit
     with:
       tag_name: calibre-${{ needs.print-release-version.outputs.calibre-release-version }}-ryanheyser
-      release_name: Calibre ${{ needs.print-release-version.outputs.calibre-release-version }}
+      name: Calibre ${{ needs.print-release-version.outputs.calibre-release-version }}
       body: ${{ needs.print-release-version.outputs.calibre-release-version-complete != '' && needs.print-release-version.outputs.calibre-release-version-complete || '' }}
       draft: false
       prerelease: false
+      make_latest: true
