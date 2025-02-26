@@ -36,7 +36,7 @@ jobs:
       - id: output-release-info
         run: echo "CALIBRE_RELEASE_VERSION=$(echo '${{ needs.get-release-version.outputs.result }}' | jq -r '.stable_version')" >> $GITHUB_OUTPUT
       - id: output-release-info-complete
-        run: echo "CALIBRE_RELEASE_VERSION_COMPLETE=\"$(echo '${{ needs.get-release-version.outputs.result }}' | jq -r '.')\"" >> $GITHUB_OUTPUT
+        run: echo "CALIBRE_RELEASE_VERSION_COMPLETE=\"$(echo '${{ needs.get-release-version.outputs.result }}' | jq '.')\"" >> $GITHUB_OUTPUT
       - id: output-docker-tags
         run: echo "DOCKER_TAGS=$(echo '${{ needs.get-release-version.outputs.docker_tags }}' | tr '\n' '\f' | sed 's/enable=false/enable=true/g' | tr '\f' '\n')" >> $GITHUB_OUTPUT
   create-release:
