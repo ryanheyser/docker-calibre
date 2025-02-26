@@ -24,6 +24,7 @@ jobs:
     needs: get-release-version
     outputs:
       calibre-release-version: ${{ steps.output-release-info.outputs.CALIBRE_RELEASE_VERSION }}
+      force-enable-docker-tags: ${{ steps.output-release-info.outputs.DOCKER_TAGS }}
     steps:
       - id: get-release-info
         run: |
@@ -33,6 +34,8 @@ jobs:
           echo '${{ needs.get-release-version.outputs.result }}' | jq -r '.stable_version'
       - id: output-release-info
         run: echo "CALIBRE_RELEASE_VERSION=$(echo '${{ needs.get-release-version.outputs.result }}' | jq -r '.stable_version')" >> $GITHUB_OUTPUT
+      - id: output-docker-tags
+        run: echo "DOCKER_TAGS=$(echo '${{ needs.get-release-version.outputs.docker_tags }}' | sed 's/enable=false/enable=true/g')" >> $GITHUB_OUTPUT
   call-package-workflow:
     permissions:
       contents: read
