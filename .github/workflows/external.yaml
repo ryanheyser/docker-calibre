@@ -39,19 +39,6 @@ jobs:
         run: echo "CALIBRE_RELEASE_VERSION_COMPLETE=$(echo '${{ needs.get-release-version.outputs.result }}' | jq -r '.')" >> $GITHUB_OUTPUT
       - id: output-docker-tags
         run: echo "DOCKER_TAGS=$(echo '${{ needs.get-release-version.outputs.docker_tags }}' | tr '\n' '\f' | sed 's/enable=false/enable=true/g' | tr '\f' '\n')" >> $GITHUB_OUTPUT
-  call-package-workflow:
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
-    uses: ryanheyser/docker-calibre/.github/workflows/package.yaml@ryanheyser-main
-    needs: [ get-release-version, print-release-version ]
-    if: needs.get-release-version.outputs.is_update == 'true'
-    with:
-      calibre-version: ${{ needs.print-release-version.outputs.calibre-release-version }}
-      additional-docker-tags: ${{ github.event_name == 'workflow_dispatch' && needs.print-release-version.outputs.force-enable-docker-tags || needs.get-release-version.outputs.docker_tags }}
-    secrets: inherit
   create-release:
     permissions:
       contents: write
@@ -71,3 +58,17 @@ jobs:
           draft: false
           prerelease: false
           make_latest: true
+  call-package-workflow:
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    uses: ryanheyser/docker-calibre/.github/workflows/package.yaml@ryanheyser-main
+    needs: [ get-release-version, print-release-version, create-release ]
+    if: needs.get-release-version.outputs.is_update == 'true'
+    with:
+      calibre-version: ${{ needs.print-release-version.outputs.calibre-release-version }}
+      additional-docker-tags: ${{ github.event_name == 'workflow_dispatch' && needs.print-release-version.outputs.force-enable-docker-tags || needs.get-release-version.outputs.docker_tags }}
+    secrets: inherit
+  
