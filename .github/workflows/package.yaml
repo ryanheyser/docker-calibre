@@ -21,7 +21,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  CALIBRE_RELEASE: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.calibre-version != '' && github.event.inputs.calibre-version || '' }}
+  CALIBRE_RELEASE: ${{ github.event_name == 'workflow_dispatch' && inputs.calibre-version != '' && inputs.calibre-version || '' }}
 
 jobs:
   build-image:
