@@ -65,7 +65,7 @@ jobs:
       attestations: write
       id-token: write
     uses: ryanheyser/docker-calibre/.github/workflows/package.yaml@ryanheyser-main
-    needs: [ get-release-version, print-release-version, ]
+    needs: [ get-release-version, print-release-version, create-release ]
     if: needs.get-release-version.outputs.is_update == 'true'
     with:
       calibre-version: ${{ needs.print-release-version.outputs.calibre-release-version }}
