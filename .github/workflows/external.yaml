@@ -4,6 +4,15 @@ on:
   schedule:
     - cron:  '0 2 * * *'
   workflow_dispatch:
+    inputs:
+      createrelease:
+        type: boolean
+        required: false
+        default: false
+      callpackage:
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   get-release-version:
