@@ -26,6 +26,7 @@ RUN \
     libnss3 \
     libqpdf29t64 \
     libxkbcommon-x11-0 \
+    libxcb-cursor0 \
     libxcb-icccm4 \
     libxcb-image0 \
     libxcb-keysyms1 \
