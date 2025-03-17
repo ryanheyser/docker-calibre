@@ -23,6 +23,11 @@ jobs:
       result: ${{ steps.check_version.outputs.result }}
       docker_tags: ${{ steps.check_version.outputs.docker_tags }}
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        with:
+          egress-policy: audit
+
       - uses: mogeko/latest-version@v1.1.2
         id: check_version
         with:
@@ -36,6 +41,11 @@ jobs:
       calibre-release-version-complete: ${{ steps.output-release-info.outputs.CALIBRE_RELEASE_VERSION_COMPLETE }}
       force-enable-docker-tags: ${{ steps.output-docker-tags.outputs.DOCKER_TAGS }}
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        with:
+          egress-policy: audit
+
       - id: get-release-info
         run: |
           echo '${{ needs.get-release-version.outputs.is_update }}'
@@ -63,6 +73,11 @@ jobs:
     needs: [ get-release-version, print-release-version ]
     if: ( needs.get-release-version.outputs.is_update == 'true' || inputs.createrelease == true )
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        with:
+          egress-policy: audit
+
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: calibre-${{ needs.print-release-version.outputs.calibre-release-version }}-ryanheyser
