@@ -7,10 +7,12 @@ on:
     inputs:
       createrelease:
         type: boolean
+        description: create release
         required: false
         default: false
       callpackage:
         type: boolean
+        description: call package
         required: false
         default: false
 
