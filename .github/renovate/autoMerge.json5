@@ -9,14 +9,24 @@
       "ignoreTests": true,
       "matchUpdateTypes": ["minor", "patch"],
       "matchPackagePattern": [
+        "actions/cache",
         "actions/checkout",
+        "actions/dependency-review-action",
+        "actions/download-artifact",
         "actions/setup-node",
         "actions/setup-go",
         "actions/setup-python",
-        "actions/cache",
         "actions/upload-artifact",
-        "actions/download-artifact",
-        "renovatebot/github-action"
+        "docker/build-push-action",
+        "docker/login-action",
+        "docker/metadata-action",
+        "docker/setup-buildx-action",
+        "docker/setup-qemu-action",
+        "github/codeql-action",
+        "ossf/scorecard-action",
+        "renovatebot/github-action",
+        "softprops/action-gh-release",
+        "step-security/harden-runner"
       ]
     }
   ]
