@@ -1,0 +1,23 @@
+{
+  "packageRules": [
+    {
+      "description": "Auto merge GitHub Actions",
+      "matchManagers": ["github-actions"],
+      "matchDatasources": ["github-tags"],
+      "automerge": true,
+      "automergeType": "branch",
+      "ignoreTests": true,
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackagePattern": [
+        "actions/checkout",
+        "actions/setup-node",
+        "actions/setup-go",
+        "actions/setup-python",
+        "actions/cache",
+        "actions/upload-artifact",
+        "actions/download-artifact",
+        "renovatebot/github-action"
+      ]
+    }
+  ]
+}
