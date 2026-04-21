@@ -35,7 +35,7 @@ jobs:
       with:
         token: ${{ secrets.PAT }}
         fetch-depth: 1
-        ref: main
+        ref: ryanheyser-main
 
     # - name: Install yq
     #   run: |
