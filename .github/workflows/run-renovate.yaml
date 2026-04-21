@@ -18,7 +18,7 @@ on:
         type: string
       configurationFile:
         description: "Renovate configuration file"
-        default: ".github/renovate.json"
+        default: ".github/renovate.json5"
         required: false
         type: string
     secrets:
@@ -42,7 +42,7 @@ on:
         type: string
       configurationFile:
         description: "Renovate configuration file"
-        default: ".github/renovate.json"
+        default: ".github/renovate.json5"
         required: false
         type: string
     secrets:
