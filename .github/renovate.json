@@ -23,7 +23,6 @@
   platformCommit: 'enabled',
   gitAuthor: 'Ryan Heyser <rumblpak@users.noreply.github.com>',
   commitBody: 'Signed-off-by: Ryan Heyser <rumblpak@users.noreply.github.com>',
-  ignorePaths: [],
   'github-actions': {
     managerFilePatterns: [
       '/(^|/)(workflow-templates|.(?:github|gitea|forgejo)/(?:workflows|actions))/.+.ya?ml$/',
