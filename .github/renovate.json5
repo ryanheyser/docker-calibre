@@ -29,4 +29,5 @@
       '/(^|/)action.ya?ml$/',
     ],
   },
+  forkProcessing: 'enabled',
 }
