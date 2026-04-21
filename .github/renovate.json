@@ -8,8 +8,8 @@
     ':semanticCommits',
     ':automergeDigest',
     ':automergeBranch',
-    'github>ryanheyser/homelab-ops//.github/renovate/automerge-github-actions.json',
-    'github>ryanheyser/homelab-ops//.github/renovate/autoMerge.json5'
+    'github>ryanheyser/docker-calibre //.github/renovate/automerge-github-actions.json',
+    'github>ryanheyser/docker-calibre //.github/renovate/autoMerge.json5'
   ],
   enabled: true,
   timezone: 'America/New_York',
