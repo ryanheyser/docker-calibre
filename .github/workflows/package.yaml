@@ -112,7 +112,7 @@ jobs:
           push: true
           # tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          sbom: true
+          # sbom: true
           provenance: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
